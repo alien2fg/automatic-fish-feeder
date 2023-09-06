@@ -23,9 +23,9 @@ Software apps and online services:
 
 1. Install all the necessary software. In order for ESP32 to work with Arduino IDE you need to configure it properly [Heading link](https://www.youtube.com/watch?v=UuuqnmJIjR0).
 2. Register on Firebase and create your project, select Realtime Database and copy the following values:
-<p align="center">
+ <p align="center">
   <img src="images\au_firebase.png" width="550" title="hover text">
-</p>
+ </p>
 <p align="center">
   <img src="images\url_firebase.png" width="550" title="hover text">
 </p>
@@ -34,10 +34,15 @@ Software apps and online services:
   <img src="images\app_firebase.png" width="550" title="hover text">
 </p>
 4. In the folder you prepared in the previous step, place the Web_interface.html code in index.html and add to it the Firebase Config which you will find in your apps tab in project settings. Save it and deploy it.
-5. Check that the website and database are working.
-6. Place the ESP_program.ino code in the Arduino IDE adding the previously copied Au and URL along with your Wifi network data.
-7. Check everything is working.
-8. Glue 3d parts together and enjoy your own fish feeder. :smile:
+<p align="center">
+  <img src="images\index_fishfeeder.png" width="550" title="hover text">
+</p>
+Check that the website and database are working.
+5. Place the ESP_program.ino code in the Arduino IDE adding the previously copied Au and URL along with your Wifi network data.
+<p align="center">
+  <img src="images\arduino_view.png" width="550" title="hover text">
+</p> Check everything is working.
+6. Glue 3d parts together and enjoy your own fish feeder. :smile:
 
 # Author
 
