@@ -5,21 +5,25 @@ https://www.hackster.io/coderscafe/aquassist-diy-automatic-fish-feeder-with-comp
 
 # What you need
 
-####Hardware components:
+Hardware components:
 
-1. ESP32 Board [Heading link](https://sklep.msalamon.pl/produkt/zestaw-esp32-esp-wroom-32u-z-antena-i-przewodem-usb/)
-2. Breadboard [Heading link](https://www.amazon.com/BB400-Solderless-Plug-BreadBoard-tie-points/dp/B0040Z1ERO)
-3. USB 5V 2A Wall Adapter [Heading link](https://thinkrobotics.com/products/power-supply-5v-2-4a)
-4. Feetech FS90R Servo [Heading link](https://botland.com.pl/serwa-praca-ciagla-360/4689-serwo-feetech-fs90r-micro-praca-ciagla-360-stopni-5904422305888.html)
-5. 3d models of the needed parts (in the repo on git you can find STL codes for your own use)
+- ESP32 Board [Heading link](https://sklep.msalamon.pl/produkt/zestaw-esp32-esp-wroom-32u-z-antena-i-przewodem-usb/)
+- Breadboard [Heading link](https://www.amazon.com/BB400-Solderless-Plug-BreadBoard-tie-points/dp/B0040Z1ERO)
+- USB 5V 2A Wall Adapter [Heading link](https://thinkrobotics.com/products/power-supply-5v-2-4a)
+- Feetech FS90R Servo [Heading link](https://botland.com.pl/serwa-praca-ciagla-360/4689-serwo-feetech-fs90r-micro-praca-ciagla-360-stopni-5904422305888.html)
+- 3d models of the needed parts (in the repo on git you can find STL codes for your own use)
 
-####Software apps and online services:
+Software apps and online services:
 
-1. Firebase [Heading link](https://console.firebase.google.com/)
-2. Arduino Ide [Heading link](https://www.arduino.cc/en/software)
-3. Visual Studio Code [Heading link](https://code.visualstudio.com/)
+- Firebase [Heading link](https://console.firebase.google.com/)
+- Arduino Ide [Heading link](https://www.arduino.cc/en/software)
+- Visual Studio Code [Heading link](https://code.visualstudio.com/)
 
 # Configuration and launch
+
+1. Install all the necessary software. In order for ESP32 to work with Arduino IDE you need to configure it properly [Heading link](https://www.youtube.com/watch?v=UuuqnmJIjR0).
+2. Register on Firebase and create your project, select Realtime Database and copy the following values:
+   ![](https://pandao.github.io/editor.md/examples/images/8.jpg)
 
 # Author
 
