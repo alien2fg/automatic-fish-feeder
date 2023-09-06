@@ -1,79 +1,93 @@
-
-
-#include <FirebaseESP8266.h>
-#include <ESP8266WiFi.h>
+#include <ESP32Servo.h>
+#include "FirebaseESP32.h"
+#include <WiFi.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
-#include <Servo.h>
-
-Servo servo;
 
 #define FIREBASE_HOST ""
 #define FIREBASE_AUTH ""
 #define WIFI_SSID ""
 #define WIFI_PASSWORD ""
+#define PIN_SG90 26 // Output pin for servo
+
+Servo servo;
 
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800);
-
+NTPClient timeClient(ntpUDP, "pl.pool.ntp.org", 3600);
 FirebaseData timer, feed;
 String stimer;
-String Str[] = {"00:00", "00:00", "00:00"};
-int i, feednow = 0;
+String Str[3] = {"00:00", "00:00", "00:00"};
+int feednow = 0;
+
 void setup()
 {
     Serial.begin(9600);
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-    Serial.print("Connecting to a");
+    Serial.print("Connecting to WiFi");
+
     while (WiFi.status() != WL_CONNECTED)
     {
         Serial.print(".");
         delay(500);
     }
+
     Serial.println();
-    Serial.print("connected: ");
+    Serial.print("Connected, IP address: ");
     Serial.println(WiFi.localIP());
+
+    // Set time zone and NTP servers
+    configTzTime("CET-1CEST,M3.5.0,M10.5.0/3", "tempus1.gum.gov.pl", "pl.pool.ntp.org");
 
     timeClient.begin();
     Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
     Firebase.reconnectWiFi(true);
-    servo.attach(D3); // Pin attached to D3
+
+    servo.setPeriodHertz(50);          // PWM frequency for SG90
+    servo.attach(PIN_SG90, 500, 2400); // Servo angle limits
 }
 
 void loop()
 {
+    timeClient.update();
+    String currentTime = String(timeClient.getHours()) + ":" + (timeClient.getMinutes() < 10 ? "0" : "") + String(timeClient.getMinutes());
+    Serial.println("Current time: " + currentTime);
+
     Firebase.getInt(feed, "feednow");
     feednow = feed.to<int>();
-    Serial.println(feednow);
-    if (feednow == 1) // Direct Feeding
-    {
-        servo.writeMicroseconds(1000); // rotate clockwise
-        delay(700);                    // allow to rotate for n micro seconds, you can change this to your need
-        servo.writeMicroseconds(1500); // stop rotation
+    Serial.println("Feednow value: " + String(feednow));
+
+    if (feednow == 1)
+    {                                  // Direct Feeding
+        servo.writeMicroseconds(1000); // Rotate clockwise
+        delay(3000);                   // Rotate for n microseconds (adjust as needed)
+        servo.writeMicroseconds(1500); // Stop rotation
         feednow = 0;
-        Firebase.setInt(feed, "/feednow", feednow);
+        Firebase.setInt(feed, "feednow", feednow);
         Serial.println("Fed");
     }
     else
-    { // Scheduling feed
-        for (i = 0; i < 3; i++)
+    { // Scheduled Feeding
+        for (int i = 0; i < 3; i++)
         {
-            String path = "timers/timer" + String(i);
+            String path = "/times/time" + String(i);
             Firebase.getString(timer, path);
-            stimer = timer.to<String>();
-            Str[i] = stimer.substring(9, 14);
+            stimer = timer.stringData();
+            Str[i] = stimer.substring(0, 5); // Extract HH:mm from the timer string
+            Serial.print("Timer " + String(i) + " path: ");
+            Serial.println(path);
+            Serial.print("Timer " + String(i) + " value: ");
+            Serial.println(stimer);
         }
-        timeClient.update();
-        String currentTime = String(timeClient.getHours()) + ":" + String(timeClient.getMinutes());
         if (Str[0] == currentTime || Str[1] == currentTime || Str[2] == currentTime)
         {
-            servo.writeMicroseconds(1000); // rotate clockwise
-            delay(700);                    // allow to rotate for n micro seconds, you can change this to your need
-            servo.writeMicroseconds(1500); // stop rotation
+            servo.writeMicroseconds(1000); // Rotate clockwise
+            delay(3000);                   // Rotate for n microseconds (adjust as needed)
+            servo.writeMicroseconds(1500); // Stop rotation
             Serial.println("Success");
-            delay(60000);
+            delay(60000); // Delay for one minute before checking again
         }
     }
+
     Str[0] = "00:00";
     Str[1] = "00:00";
     Str[2] = "00:00";
