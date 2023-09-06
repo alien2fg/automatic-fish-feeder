@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fish Feeder - Settings</title>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.5/firebase-database.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+      /* Add your custom CSS styles here */
+    </style>
+  </head>
+  <body>
+    <!-- Heading -->
+    <h1>Fish Feeder Settings</h1>
+    <h2>Time is about 1h and 2 min in the back</h2>
+    <!-- Time Display -->
+    <div id="time"></div>
+
+    <!-- Settings Form -->
+    <form id="settings-form">
+      <!-- Time Input and Remove Button for Time 0 -->
+      <label for="time0">Time 0:</label>
+      <input type="time" id="time0" name="time0" />
+      <button type="button" onclick="removeTime('time0')">Remove</button
+      ><br /><br />
+
+      <!-- Time Input and Remove Button for Time 1 -->
+      <label for="time1">Time 1:</label>
+      <input type="time" id="time1" name="time1" />
+      <button type="button" onclick="removeTime('time1')">Remove</button
+      ><br /><br />
+
+      <!-- Time Input and Remove Button for Time 2 -->
+      <label for="time2">Time 2:</label>
+      <input type="time" id="time2" name="time2" />
+      <button type="button" onclick="removeTime('time2')">Remove</button
+      ><br /><br />
+
+      <!-- Save Settings Button -->
+      <button type="button" onclick="saveSettings()">Save Settings</button>
+    </form>
+
+    <!-- Feed Now Button -->
+    <button type="button" onclick="feedNow()">Feed Now</button>
+
+    <!-- Timers Display Wrapper -->
+    <div id="wrapper" class="wrapper"></div>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {};
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+      let count = 0;
+
+      /**
+       * Save user settings to Firebase
+       */
+      function saveSettings() {
+        const times = {};
+        for (let i = 0; i < 3; i++) {
+          const timeInput = document.getElementById(`time${i}`);
+          times[`time${i}`] = timeInput.value;
+        }
+
+        db.ref('times')
+          .set(times)
+          .then(() => console.log('Settings saved!'))
+          .catch((error) => console.error('Error saving settings:', error));
+      }
+
+      /**
+       * Load user settings from Firebase
+       */
+      db.ref('times').on('value', (snapshot) => {
+        const times = snapshot.val();
+        for (let i = 0; i < 3; i++) {
+          const timeInput = document.getElementById(`time${i}`);
+          timeInput.value = times[`time${i}`];
+        }
+      });
+
+      /**
+       * Add timers to display on page load
+       */
+      $(document).ready(function () {
+        addDiv();
+      });
+
+      /**
+       * Add a new timer to Firebase
+       * @param {number} count - The timer count
+       * @param {object} e - The timer object
+       */
+      function addStore(count, e) {
+        db.ref('timers/timer' + count).set({
+          time: e.time,
+        });
+        addDiv();
+      }
+
+      /**
+       * Toggle visibility of timer details
+       * @param {string} id - The timer ID
+       */
+      function showShort(id) {
+        const idv = $(id)[0]['id'];
+        $('#time_' + idv).toggle();
+        $('#short_' + idv).toggle();
+      }
+
+      /**
+       * Remove a timer
+       * @param {string} id - The timer ID
+       */
+      function removeDiv(id) {
+        const idv = $(id)[0]['id'];
+        db.ref('timers/' + idv).remove();
+        if (count >= 0) {
+          count--;
+        }
+        db.ref().update({
+          count: parseInt(count),
+        });
+        $(id).fadeOut(1, 0).fadeTo(500, 0);
+      }
+
+      /**
+       * Display timers on the page
+       */
+      function addDiv() {
+        const divRef = db.ref('timers');
+        divRef.on('value', function (snapshot) {
+          const obj = snapshot.val();
+          let i = 0;
+          $('#wrapper').html('');
+          while (i <= count) {
+            const propertyValues = Object.entries(obj);
+            let ts = propertyValues[i][1]['time'];
+            let H = +ts.substr(0, 2);
+            let h = H % 12 || 12;
+            h = h < 10 ? '0' + h : h;
+            let ampm = H < 12 ? ' AM' : ' PM';
+            ts = h + ts.substr(2, 3) + ampm;
+
+            const x = `
+          <div id=${propertyValues[i][0]}>
+            <div class="btn2 btn__secondary2" onclick=showShort(${propertyValues[i][0]}) id="main_${propertyValues[i][0]}">
+              <div id="time_${propertyValues[i][0]}">
+                ${ts}
+              </div>
+              <div class="icon2" id="short_${propertyValues[i][0]}" onclick=removeDiv(${propertyValues[i][0]})>
+                <div class="icon__add">
+                  X <!-- Remove Icon -->
+                </div>
+              </div>
+            </div>
+          </div>`;
+
+            $('#wrapper').append(x);
+            i++;
+          }
+        });
+      }
+
+      /**
+       * Perform immediate feeding
+       */
+      function feedNow() {
+        db.ref()
+          .update({
+            feednow: 1,
+          })
+          .then(() => {
+            console.log('Feeding now!');
+          })
+          .catch((error) => {
+            console.error('Error while feeding:', error);
+          });
+      }
+
+      /**
+       * Refresh and display the current time
+       */
+      function refreshTime() {
+        const timeDisplay = document.getElementById('time');
+        const dateString = new Date().toLocaleString();
+        const formattedString = dateString.replace(', ', ' - ');
+        timeDisplay.textContent = formattedString;
+      }
+      setInterval(refreshTime, 1000);
+
+      var datetime = new Date();
+      document.getElementById('time').textContent = datetime;
+
+      /**
+       * Remove a specific time setting
+       * @param {string} id - ID of the time setting to remove
+       */
+      function removeTime(id) {
+        db.ref('times')
+          .update({ [id]: null })
+          .then(() => console.log(`Time ${id} removed.`))
+          .catch((error) => console.error(`Error removing time ${id}:`, error));
+      }
+    </script>
+  </body>
+</html>

@@ -1,5 +1,6 @@
 
-#include "FirebaseESP8266.h"
+
+#include <FirebaseESP8266.h>
 #include <ESP8266WiFi.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
@@ -7,10 +8,10 @@
 
 Servo servo;
 
-#define FIREBASE_HOST "<FIREBASE_HOST>"
-#define FIREBASE_AUTH "<FIREBASE_AUTH>"
-#define WIFI_SSID "<SSID>"
-#define WIFI_PASSWORD "<PASSWORD>"
+#define FIREBASE_HOST ""
+#define FIREBASE_AUTH ""
+#define WIFI_SSID ""
+#define WIFI_PASSWORD ""
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800);
