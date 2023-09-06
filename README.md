@@ -24,12 +24,15 @@ Software apps and online services:
 1. Install all the necessary software. In order for ESP32 to work with Arduino IDE you need to configure it properly [Heading link](https://www.youtube.com/watch?v=UuuqnmJIjR0).
 2. Register on Firebase and create your project, select Realtime Database and copy the following values:
 <p align="center">
-  <img src="images\au_firebase.png" width="350" title="hover text">
-  <img src="your_relative_path_here_number_2_large_name" width="350" alt="accessibility text">
+  <img src="images\au_firebase.png" width="550" title="hover text">
 </p>
-   ![](images\url_firebase.png).
+<p align="center">
+  <img src="images\url_firebase.png" width="550" title="hover text">
+</p>
 3. Go to the project settings tab and create your own application (choose the option with hosting and follow the commands one by one in the browser and in Visual Studio Code).
-   ![](images\app_firebase.png).
+<p align="center">
+  <img src="images\app_firebase.png" width="550" title="hover text">
+</p>
 4. In the folder you prepared in the previous step, place the Web_interface.html code in index.html and add to it the Firebase Config which you will find in your apps tab in project settings. Save it and deploy it.
 5. Check that the website and database are working.
 6. Place the ESP_program.ino code in the Arduino IDE adding the previously copied Au and URL along with your Wifi network data.
