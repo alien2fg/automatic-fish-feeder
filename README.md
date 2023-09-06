@@ -23,9 +23,10 @@ Software apps and online services:
 
 1. Install all the necessary software. In order for ESP32 to work with Arduino IDE you need to configure it properly [Heading link](https://www.youtube.com/watch?v=UuuqnmJIjR0).
 2. Register on Firebase and create your project, select Realtime Database and copy the following values:
-   ![](https://pandao.github.io/editor.md/examples/images/8.jpg).
+   ![](images\au_firebase.png).
+   ![](images\url_firebase.png).
 3. Go to the project settings tab and create your own application (choose the option with hosting and follow the commands one by one in the browser and in Visual Studio Code).
-   ![](https://pandao.github.io/editor.md/examples/images/8.jpg).
+   ![](images\app_firebase.png).
 4. In the folder you prepared in the previous step, place the Web_interface.html code in index.html and add to it the Firebase Config which you will find in your apps tab in project settings. Save it and deploy it.
 5. Check that the website and database are working.
 6. Place the ESP_program.ino code in the Arduino IDE adding the previously copied Au and URL along with your Wifi network data.
