@@ -37,12 +37,11 @@ Software apps and online services:
 <p align="center">
   <img src="images\index_fishfeeder.png" width="550" title="hover text">
 </p>
-Check that the website and database are working.
-5. Place the ESP_program.ino code in the Arduino IDE adding the previously copied Au and URL along with your Wifi network data.
+5. Check that the website and database are working. Place the ESP_program.ino code in the Arduino IDE adding the previously copied Au and URL along with your Wifi network data.
 <p align="center">
   <img src="images\arduino_view.png" width="550" title="hover text">
-</p> Check everything is working.
-6. Glue 3d parts together and enjoy your own fish feeder. :smile:
+</p>
+6. Check everything is working, glue 3d parts together and enjoy your own fish feeder. :smile:
 
 # Author
 
